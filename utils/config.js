@@ -5,9 +5,9 @@ const limiter = rateLimit({
   max: 100, // limit each IP to 100 requests per windowMs
 });
 
-const DB_ADRESS = 'mongodb://localhost:27017/bitfilmsdb';
+const DB_ADRESS_DEV = 'mongodb://localhost:27017/bitfilmsdb';
 
 module.exports = {
   limiter,
-  DB_ADRESS,
+  DB_ADRESS_DEV,
 };

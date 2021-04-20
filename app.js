@@ -10,15 +10,16 @@ const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const errorHandler = require('./middlewares/ErrorHandler');
-const { limiter, DB_ADRESS } = require('./utils/config');
+const { limiter, DB_ADRESS_DEV } = require('./utils/config');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, NODE_ENV, MONGO_URL } = process.env;
 
 const app = express();
 
 app.use(cors());
 
-mongoose.connect(DB_ADRESS, {
+// mongoose.connect(DB_ADRESS, {
+mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : DB_ADRESS_DEV, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
