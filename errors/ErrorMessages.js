@@ -1,4 +1,4 @@
-const notFoundMessage = 'Ресурс не найден';
+const notFoundMessage = 'Данные не найдены';
 const badRequestMessage = 'Введены невалидные данные';
 const forbiddenMessage = 'Не хватает прав';
 const conflictMessage = 'Пользователь с таким логином уже существует';

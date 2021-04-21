@@ -71,16 +71,15 @@ const deleteMovieById = (req, res, next) => {
   movieSchema.findById(id)
     .select('+owner')
     .then((movie) => {
-      console.log(movie);
       if (!movie) {
         throw new NotFoundError(notFoundMessage);
       }
       if (movie.owner.toString() !== req.user._id) {
         throw new Forbidden(forbiddenMessage);
       }
-
-      movieSchema.findByIdAndDelete(req.params.movieId)
-        .then(deletedMovie => res.status(200).send(deletedMovie));
+      movieSchema.findByIdAndDelete(id)
+        .then(deletedMovie => res.status(200).send(deletedMovie))
+        .catch(next);
     })
     .catch(next);
 };

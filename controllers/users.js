@@ -36,13 +36,13 @@ const createProfile = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    throw new BadRequestError(badRequestMessage);
+    throw new UnauthorizedError(unauthorizedMessage);
   }
   userSchema.findOne({ email })
     .select('+password')
     .then((user) => {
       if (!user) {
-        throw new UnauthorizedError(unauthorizedMessage);
+        throw new BadRequestError(badRequestMessage);
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
@@ -63,7 +63,7 @@ const login = (req, res, next) => {
 
 const getProfile = (req, res, next) => userSchema.findById(req.user._id)
   .catch(() => {
-    throw new NotFoundError('Пользователь с таким id не найден');
+    throw new NotFoundError(notFoundMessage);
   })
   .then(user => res.send(user))
   .catch(next);
@@ -75,7 +75,7 @@ const updateProfile = (req, res, next) => {
   }
   userSchema.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => {
-      if (!user) {
+      if (user) {
         throw new NotFoundError(notFoundMessage);
       }
       res.send({ email: user.email, name: user.name });
@@ -86,6 +86,9 @@ const updateProfile = (req, res, next) => {
       }
       if (err.name === 'ValidationError') {
         throw new BadRequestError(badRequestMessage);
+      }
+      if (err.codeName === 'DuplicateKey') {
+        throw new ConflictError(conflictMessage);
       }
       next(err);
     })
