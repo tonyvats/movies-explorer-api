@@ -75,7 +75,7 @@ const updateProfile = (req, res, next) => {
   }
   userSchema.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => {
-      if (user) {
+      if (!user) {
         throw new NotFoundError(notFoundMessage);
       }
       res.send({ email: user.email, name: user.name });
@@ -93,6 +93,7 @@ const updateProfile = (req, res, next) => {
       next(err);
     })
     .catch(next);
+
 };
 
 module.exports = {
